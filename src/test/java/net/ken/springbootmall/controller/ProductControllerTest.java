@@ -105,4 +105,16 @@ public class ProductControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", equalTo("這是來自澳洲的蘋果！")))
                 .andReturn();
     }
+
+    @Transactional
+    @Test
+    public void deleteProduct() throws Exception {
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .delete("/products/{productId}", 1);
+
+        MvcResult mvcResult = mockMvc.perform(requestBuilder)
+                .andDo(print())
+                .andExpect(status().is(204))
+                .andReturn();
+    }
 }

@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class ProductDaoImplTest {
@@ -81,5 +80,19 @@ public class ProductDaoImplTest {
         assertEquals(20, product.getPrice());
         assertEquals(10, product.getStock());
         assertEquals("這是來自澳洲的蘋果！", product.getDescription());
+    }
+
+    @Transactional
+    @Test
+    public void deleteProduct() {
+        // Given
+        Integer productId = 1;
+
+        // When
+        productDao.deleteProductById(productId);
+
+        // Then
+        Product product = productDao.getProductById(productId);
+        assertNull(product);
     }
 }

@@ -93,4 +93,16 @@ public class ProductServiceImplTest {
         // Then
         Mockito.verify(productDao, Mockito.times(1)).updateProduct(productId, productRequest);
     }
+
+    @Test
+    public void deleteProduct() {
+        // Given
+        Integer productId = 1;
+
+        // When
+        productService.deleteProductById(productId);
+
+        // Then
+        Mockito.verify(productDao, Mockito.times(1)).deleteProductById(productId);
+    }
 }
