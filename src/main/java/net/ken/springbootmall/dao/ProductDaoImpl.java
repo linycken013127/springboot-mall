@@ -24,10 +24,10 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product getProductById(Integer productId) {
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, " +
-                "description, created_date, last_modified_date FROM product WHERE product_id = :productId";
+                "description, created_date, last_modified_date FROM product WHERE product_id = :product_id";
 
         Map<String, Object> map = new HashMap<>();
-        map.put("productId", productId);
+        map.put("product_id", productId);
 
         List<Product> product = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
@@ -41,24 +41,45 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Integer createProduct(ProductRequest productRequest) {
         String sql = "INSERT INTO product (product_name, category, image_url, price, stock, description, created_date, last_modified_date) " +
-                "VALUES (:product_name, :category, :image_url, :price, :stock, :description, :created_date, :last_modified_date )";
+                "VALUES (:productName, :category, :imageUrl, :price, :stock, :description, :createdDate, :lastModifiedDate )";
 
         Map<String, Object> map = new HashMap<>();
-        map.put("product_name", productRequest.getName());
+        map.put("productName", productRequest.getName());
         map.put("category", productRequest.getCategory().name());
-        map.put("image_url", productRequest.getImageUrl());
+        map.put("imageUrl", productRequest.getImageUrl());
         map.put("price", productRequest.getPrice());
         map.put("stock", productRequest.getStock());
         map.put("description", productRequest.getDescription());
 
         Date now = new Date();
-        map.put("created_date", now);
-        map.put("last_modified_date", now);
+        map.put("createdDate", now);
+        map.put("lastModifiedDate", now);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
 
         return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public void updateProduct(Integer productId, ProductRequest productRequest) {
+        String sql = "UPDATE product SET product_name = :productName, category = :category, image_url = :imageUrl, " +
+                "price = :price, stock = :stock, description = :description, last_modified_date = :lastModifiedDate " +
+                "WHERE product_id = :productId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+        map.put("productName", productRequest.getName());
+        map.put("category", productRequest.getCategory().name());
+        map.put("imageUrl", productRequest.getImageUrl());
+        map.put("price", productRequest.getPrice());
+        map.put("stock", productRequest.getStock());
+        map.put("description", productRequest.getDescription());
+        map.put("lastModifiedDate", new Date());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
     }
 }
