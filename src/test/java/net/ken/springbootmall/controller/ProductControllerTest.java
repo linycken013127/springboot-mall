@@ -75,4 +75,34 @@ public class ProductControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", equalTo("這是來自澳洲的蘋果！")))
                 .andReturn();
     }
+
+    @Transactional
+    @Test
+    public void updateProduct() throws Exception {
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setName("蘋果");
+        productRequest.setCategory(ProductCategory.FOOD);
+        productRequest.setImageUrl("https://cdn.pixabay.com/photo/2014/02/01/17/28/apple-256261__480.jpg");
+        productRequest.setPrice(20);
+        productRequest.setStock(10);
+        productRequest.setDescription("這是來自澳洲的蘋果！");
+
+        String json = objectMapper.writeValueAsString(productRequest);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/products/{productId}", 7)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        MvcResult mvcResult = mockMvc.perform(requestBuilder)
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", equalTo("蘋果")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category", equalTo("FOOD")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.image_url", equalTo("https://cdn.pixabay.com/photo/2014/02/01/17/28/apple-256261__480.jpg")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price", equalTo(20)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stock", equalTo(10)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", equalTo("這是來自澳洲的蘋果！")))
+                .andReturn();
+    }
 }

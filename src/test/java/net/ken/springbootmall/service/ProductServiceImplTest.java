@@ -73,4 +73,24 @@ public class ProductServiceImplTest {
         // Then
         assertNotNull(productId);
     }
+
+    @Test
+    public void updateProduct() {
+        // Given
+        Integer productId = 1;
+
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setName("蘋果A");
+        productRequest.setCategory(ProductCategory.FOOD);
+        productRequest.setImageUrl("https://cdn.pixabay.com/photo/2014/02/01/17/28/apple-256261__480.jpg");
+        productRequest.setPrice(20);
+        productRequest.setStock(10);
+        productRequest.setDescription("這是來自澳洲的蘋果！");
+
+        // When
+        productService.updateProduct(productId, productRequest);
+
+        // Then
+        Mockito.verify(productDao, Mockito.times(1)).updateProduct(productId, productRequest);
+    }
 }

@@ -53,4 +53,33 @@ public class ProductDaoImplTest {
         // Then
         assertNotNull(productId);
     }
+
+    @Transactional
+    @Test
+    public void updateProduct() {
+        // Given
+        Integer productId = 7;
+
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setName("蘋果");
+        productRequest.setCategory(ProductCategory.FOOD);
+        productRequest.setImageUrl("https://cdn.pixabay.com/photo/2014/02/01/17/28/apple-256261__480.jpg");
+        productRequest.setPrice(20);
+        productRequest.setStock(10);
+        productRequest.setDescription("這是來自澳洲的蘋果！");
+
+        // When
+        productDao.updateProduct(productId, productRequest);
+
+        // Then
+        Product product = productDao.getProductById(productId);
+        assertNotNull(product);
+        assertEquals(productId, product.getId());
+        assertEquals("蘋果", product.getName());
+        assertEquals(ProductCategory.FOOD, product.getCategory());
+        assertEquals("https://cdn.pixabay.com/photo/2014/02/01/17/28/apple-256261__480.jpg", product.getImageUrl());
+        assertEquals(20, product.getPrice());
+        assertEquals(10, product.getStock());
+        assertEquals("這是來自澳洲的蘋果！", product.getDescription());
+    }
 }
