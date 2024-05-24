@@ -2,6 +2,7 @@ package net.ken.springbootmall.service;
 
 import net.ken.springbootmall.constant.ProductCategory;
 import net.ken.springbootmall.dao.ProductDao;
+import net.ken.springbootmall.dto.ProductRequest;
 import net.ken.springbootmall.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ public class ProductServiceImplTest {
     }
 
     @Test
-    public void getById() {
+    public void getProductById() {
         // Given
         Integer productId = 1;
 
@@ -53,5 +54,23 @@ public class ProductServiceImplTest {
         assertEquals(30, product.getPrice());
         assertEquals(10, product.getStock());
         assertEquals("這是來自澳洲的蘋果！", product.getDescription());
+    }
+
+    @Test
+    public void createProduct() {
+        // Given
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setName("蘋果");
+        productRequest.setCategory(ProductCategory.FOOD);
+        productRequest.setImageUrl("https://cdn.pixabay.com/photo/2014/02/01/17/28/apple-256261__480.jpg");
+        productRequest.setPrice(20);
+        productRequest.setStock(10);
+        productRequest.setDescription("這是來自澳洲的蘋果！");
+
+        // When
+        Integer productId = productService.createProduct(productRequest);
+
+        // Then
+        assertNotNull(productId);
     }
 }
