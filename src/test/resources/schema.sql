@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS product;
+
 CREATE TABLE IF NOT EXISTS product
 (
     product_id         INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
