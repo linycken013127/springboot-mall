@@ -101,15 +101,7 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String, Object> map = new HashMap<>();
 
-        if (params.getCategory() != null) {
-            sql += "AND category = :category ";
-            map.put("category", params.getCategory().name());
-        }
-
-        if (params.getSearch() != null) {
-            sql += "AND product_name LIKE :productName ";
-            map.put("productName", "%" + params.getSearch() + "%");
-        }
+        sql = addFilteringSql(params, sql, map);
 
         sql = sql + "ORDER BY " + params.getOrderBy() + " " + params.getSort() + " ";
 
@@ -120,5 +112,30 @@ public class ProductDaoImpl implements ProductDao {
         List<Product> products = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
         return products;
+    }
+
+    private String addFilteringSql(ProductQueryParams params, String sql, Map<String, Object> map) {
+        if (params.getCategory() != null) {
+            sql += "AND category = :category ";
+            map.put("category", params.getCategory().name());
+        }
+
+        if (params.getSearch() != null) {
+            sql += "AND product_name LIKE :productName ";
+            map.put("productName", "%" + params.getSearch() + "%");
+        }
+        return sql;
+    }
+
+    @Override
+    public Integer countProduct(ProductQueryParams params) {
+        String sql = "SELECT count(*) FROM product WHERE 1=1 ";
+
+        Map<String, Object> map = new HashMap<>();
+
+        sql = addFilteringSql(params, sql, map);
+
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return total;
     }
 }

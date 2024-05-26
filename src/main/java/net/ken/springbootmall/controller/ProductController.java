@@ -8,6 +8,7 @@ import net.ken.springbootmall.dto.ProductQueryParams;
 import net.ken.springbootmall.dto.ProductRequest;
 import net.ken.springbootmall.model.Product;
 import net.ken.springbootmall.service.ProductService;
+import net.ken.springbootmall.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +64,7 @@ public class ProductController {
     }
 
     @GetMapping("products")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
 
@@ -84,6 +85,15 @@ public class ProductController {
         params.setOffset(offset);
 
         List<Product> products = productService.getProducts(params);
-        return ResponseEntity.status(HttpStatus.OK).body(products);
+
+        Integer total = productService.countProduct(params);
+
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(products);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 }

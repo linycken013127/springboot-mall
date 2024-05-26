@@ -16,4 +16,6 @@ public interface ProductDao {
     void deleteProductById(Integer productId);
 
     List<Product> getProducts(ProductQueryParams params);
+
+    Integer countProduct(ProductQueryParams params);
 }
