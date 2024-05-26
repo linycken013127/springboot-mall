@@ -1,5 +1,6 @@
 package net.ken.springbootmall.dao;
 
+import net.ken.springbootmall.dto.ProductQueryParams;
 import net.ken.springbootmall.dto.ProductRequest;
 import net.ken.springbootmall.model.Product;
 import net.ken.springbootmall.rowmapper.ProductRowMapper;
@@ -94,10 +95,27 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProducts() {
-        String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date FROM product";
+    public List<Product> getProducts(ProductQueryParams params) {
+        String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date FROM product " +
+                "WHERE 1=1 ";
 
         Map<String, Object> map = new HashMap<>();
+
+        if (params.getCategory() != null) {
+            sql += "AND category = :category ";
+            map.put("category", params.getCategory().name());
+        }
+
+        if (params.getSearch() != null) {
+            sql += "AND product_name LIKE :productName ";
+            map.put("productName", "%" + params.getSearch() + "%");
+        }
+
+        sql = sql + "ORDER BY " + params.getOrderBy() + " " + params.getSort() + " ";
+
+        sql += "LIMIT :limit OFFSET :offset";
+        map.put("limit", params.getLimit());
+        map.put("offset", params.getOffset());
 
         List<Product> products = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 

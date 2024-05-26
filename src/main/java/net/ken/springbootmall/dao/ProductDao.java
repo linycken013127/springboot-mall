@@ -1,5 +1,6 @@
 package net.ken.springbootmall.dao;
 
+import net.ken.springbootmall.dto.ProductQueryParams;
 import net.ken.springbootmall.dto.ProductRequest;
 import net.ken.springbootmall.model.Product;
 
@@ -14,5 +15,5 @@ public interface ProductDao {
 
     void deleteProductById(Integer productId);
 
-    List<Product> getProducts();
+    List<Product> getProducts(ProductQueryParams params);
 }

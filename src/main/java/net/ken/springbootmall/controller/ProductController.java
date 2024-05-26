@@ -1,16 +1,22 @@
 package net.ken.springbootmall.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import net.ken.springbootmall.constant.ProductCategory;
+import net.ken.springbootmall.dto.ProductQueryParams;
 import net.ken.springbootmall.dto.ProductRequest;
 import net.ken.springbootmall.model.Product;
 import net.ken.springbootmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 public class ProductController {
 
@@ -57,8 +63,27 @@ public class ProductController {
     }
 
     @GetMapping("products")
-    public ResponseEntity<List<Product>> getProducts() {
-        List<Product> products = productService.getProducts();
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search,
+
+            @RequestParam(defaultValue = "created_date") String orderBy,
+            @RequestParam(defaultValue = "desc") String sort,
+
+            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+            @RequestParam(defaultValue = "0") @Min(0) Integer offset
+    ) {
+        ProductQueryParams params = new ProductQueryParams();
+        params.setCategory(category);
+        params.setSearch(search);
+
+        params.setOrderBy(orderBy);
+        params.setSort(sort);
+
+        params.setLimit(limit);
+        params.setOffset(offset);
+
+        List<Product> products = productService.getProducts(params);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 }

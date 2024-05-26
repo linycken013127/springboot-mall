@@ -1,6 +1,7 @@
 package net.ken.springbootmall.service;
 
 import net.ken.springbootmall.dao.ProductDao;
+import net.ken.springbootmall.dto.ProductQueryParams;
 import net.ken.springbootmall.dto.ProductRequest;
 import net.ken.springbootmall.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts() {
-        return productDao.getProducts();
+    public List<Product> getProducts(ProductQueryParams params) {
+        return productDao.getProducts(params);
     }
 }
