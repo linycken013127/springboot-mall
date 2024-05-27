@@ -138,4 +138,15 @@ public class ProductDaoImpl implements ProductDao {
         Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
         return total;
     }
+
+    @Override
+    public void updateStock(Integer productId, Integer stock) {
+        String sql = "UPDATE product SET stock = :stock WHERE product_id = :productId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("stock", stock);
+        map.put("productId", productId);
+
+        namedParameterJdbcTemplate.update(sql, map);
+    }
 }
