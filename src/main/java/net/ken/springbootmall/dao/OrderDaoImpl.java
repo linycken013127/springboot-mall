@@ -1,5 +1,6 @@
 package net.ken.springbootmall.dao;
 
+import net.ken.springbootmall.dto.OrderQueryRequest;
 import net.ken.springbootmall.model.Order;
 import net.ken.springbootmall.model.OrderItem;
 import net.ken.springbootmall.rowmapper.OrderItemRowMapper;
@@ -97,5 +98,50 @@ public class OrderDaoImpl implements OrderDao {
         }
 
         return orderItemList;
+    }
+
+    @Override
+    public List<Order> getOrders(OrderQueryRequest orderQueryRequest) {
+        String sql = "SELECT order_id, user_id, total_amount FROM `order` " +
+                "WHERE 1=1 ";
+
+        Map<String, Object> map = new HashMap<>();
+
+        sql = addFilteringSql(orderQueryRequest, sql, map);
+
+        sql += "ORDER BY created_date desc ";
+
+        sql += "LIMIT :limit OFFSET :offset";
+
+        map.put("limit", orderQueryRequest.getLimit());
+        map.put("offset", orderQueryRequest.getOffset());
+
+        List<Order> orderList = namedParameterJdbcTemplate.query(sql, map, new OrderRowMapper());
+        return orderList;
+    }
+
+    private static String addFilteringSql(OrderQueryRequest orderQueryRequest, String sql, Map<String, Object> map) {
+        if (orderQueryRequest.getUserId() != null) {
+            sql += "AND user_id = :userId ";
+            map.put("userId", orderQueryRequest.getUserId());
+        }
+        return sql;
+    }
+
+    @Override
+    public Integer countOrder(OrderQueryRequest orderQueryRequest) {
+        String sql = "SELECT count(*) FROM `order` " +
+                "WHERE 1=1 ";
+
+        Map<String, Object> map = new HashMap<>();
+
+        sql = addFilteringSql(orderQueryRequest, sql, map);
+
+        sql += " LIMIT :limit OFFSET :offset";
+        map.put("limit", orderQueryRequest.getLimit());
+        map.put("offset", orderQueryRequest.getOffset());
+
+        Integer count = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return count;
     }
 }

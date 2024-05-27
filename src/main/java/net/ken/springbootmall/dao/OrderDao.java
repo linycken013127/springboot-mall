@@ -1,5 +1,6 @@
 package net.ken.springbootmall.dao;
 
+import net.ken.springbootmall.dto.OrderQueryRequest;
 import net.ken.springbootmall.model.Order;
 import net.ken.springbootmall.model.OrderItem;
 
@@ -13,4 +14,8 @@ public interface OrderDao {
     Order getOrderById(Integer orderId);
 
     List<OrderItem> getOrderItemByOrderId(Integer orderId);
+
+    List<Order> getOrders(OrderQueryRequest orderQueryRequest);
+
+    Integer countOrder(OrderQueryRequest orderQueryRequest);
 }
