@@ -1,16 +1,16 @@
 package net.ken.springbootmall.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Order {
 
-    @JsonProperty("order_id")
     private Integer id;
     private Integer userId;
     private Integer totalAmount;
     private List<OrderItem> orderItemList;
+    private Timestamp createdDate;
+    private Timestamp lastModifiedDate;
 
     public Integer getId() {
         return id;
@@ -42,5 +42,21 @@ public class Order {
 
     public void setOrderItemList(List<OrderItem> orderItemList) {
         this.orderItemList = orderItemList;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Timestamp getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Timestamp lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }
